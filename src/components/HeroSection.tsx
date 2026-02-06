@@ -27,11 +27,19 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6 leading-tight"
+            className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-4 leading-tight"
           >
-            Turning Data into{" "}
-            <span className="gradient-text">Decisions</span>
+            Hi, I'm <span className="gradient-text">Deepak Sharma</span>
           </motion.h1>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="text-2xl md:text-3xl lg:text-4xl font-semibold text-muted-foreground mb-6"
+          >
+            Turning Data into Decisions
+          </motion.h2>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
