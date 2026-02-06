@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { GraduationCap, Target, Sparkles } from "lucide-react";
+import profilePhoto from "@/assets/profile-photo.jpg";
 
 const AboutSection = () => {
   const ref = useRef(null);
@@ -32,8 +33,12 @@ const AboutSection = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <div className="relative">
-                <div className="w-full aspect-square rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                  <div className="text-9xl font-bold gradient-text">DS</div>
+                <div className="w-full aspect-square rounded-2xl overflow-hidden border-4 border-primary/20 shadow-xl">
+                  <img 
+                    src={profilePhoto} 
+                    alt="Deepak Sharma - Data Analyst & AI Engineer" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-primary rounded-xl flex items-center justify-center shadow-glow">
                   <Sparkles className="text-primary-foreground" size={40} />
