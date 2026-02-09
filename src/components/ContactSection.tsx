@@ -31,9 +31,9 @@ const ContactSection = () => {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+            transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
             className="bg-card rounded-3xl border border-border p-8 md:p-12"
           >
             <div className="grid md:grid-cols-2 gap-8 mb-8">

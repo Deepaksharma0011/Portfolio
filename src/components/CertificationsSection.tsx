@@ -76,9 +76,9 @@ const CertificationsSection = () => {
               return (
                 <motion.div
                   key={cert.title}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                  animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+                  transition={{ duration: 0.5, delay: index * 0.12, ease: "easeOut" }}
                 >
                   {cert.pdfUrl ? (
                     <a
