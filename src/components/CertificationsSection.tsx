@@ -1,33 +1,38 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
-import { Award, CheckCircle2 } from "lucide-react";
+import { CheckCircle2, ExternalLink } from "lucide-react";
 
 const certifications = [
   {
     title: "Data Analyst",
     issuer: "Deloitte",
     badge: "🏆",
+    pdfUrl: "/certificates/deloitte-data-analysis.pdf",
   },
   {
     title: "Cyber Security",
     issuer: "Deloitte",
     badge: "🔐",
+    pdfUrl: null,
   },
   {
     title: "Desktop Specialist",
     issuer: "Tableau",
     badge: "📊",
+    pdfUrl: null,
   },
   {
     title: "Power BI Certification",
     issuer: "Upflairs",
     badge: "📈",
+    pdfUrl: null,
   },
   {
     title: "Machine Learning",
     issuer: "Upflairs",
     badge: "🤖",
+    pdfUrl: null,
   },
 ];
 
@@ -54,24 +59,45 @@ const CertificationsSection = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {certifications.map((cert, index) => (
-              <motion.div
-                key={cert.title}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="flex items-center gap-4 p-5 bg-card rounded-xl border border-border hover:border-primary/30 hover:shadow-md transition-all duration-300"
-              >
-                <div className="text-3xl">{cert.badge}</div>
-                <div>
-                  <h4 className="font-semibold text-foreground">{cert.title}</h4>
-                  <p className="text-sm text-muted-foreground flex items-center gap-1">
-                    <CheckCircle2 size={14} className="text-primary" />
-                    {cert.issuer}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+            {certifications.map((cert, index) => {
+              const CardContent = (
+                <>
+                  <div className="text-3xl">{cert.badge}</div>
+                  <div>
+                    <h4 className="font-semibold text-foreground">{cert.title}</h4>
+                    <p className="text-sm text-muted-foreground flex items-center gap-1">
+                      <CheckCircle2 size={14} className="text-primary" />
+                      {cert.issuer}
+                    </p>
+                  </div>
+                </>
+              );
+
+              return (
+                <motion.div
+                  key={cert.title}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  {cert.pdfUrl ? (
+                    <a
+                      href={cert.pdfUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-4 p-5 bg-card rounded-xl border border-border hover:border-primary/30 hover:shadow-md transition-all duration-300 cursor-pointer group"
+                    >
+                      {CardContent}
+                      <ExternalLink size={16} className="ml-auto text-muted-foreground group-hover:text-primary transition-colors" />
+                    </a>
+                  ) : (
+                    <div className="flex items-center gap-4 p-5 bg-card rounded-xl border border-border hover:border-primary/30 hover:shadow-md transition-all duration-300">
+                      {CardContent}
+                    </div>
+                  )}
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>
