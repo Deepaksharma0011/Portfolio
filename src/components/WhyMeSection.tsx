@@ -56,9 +56,9 @@ const WhyMeSection = () => {
             {reasons.map((reason, index) => (
               <motion.div
                 key={reason.title}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -40 : 40, y: 20 }}
+                animate={isInView ? { opacity: 1, x: 0, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: index * 0.15, ease: "easeOut" }}
                 className="flex gap-5 p-6 bg-card rounded-2xl border border-border hover:shadow-lg transition-all duration-300"
               >
                 <div className="w-14 h-14 rounded-xl gradient-bg flex items-center justify-center flex-shrink-0">

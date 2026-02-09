@@ -63,9 +63,9 @@ const ProjectsSection = () => {
             {projects.map((project, index) => (
               <motion.div
                 key={project.title}
-                initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: index * 0.15 }}
+                initial={{ opacity: 0, y: 60, scale: 0.95 }}
+                animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+                transition={{ duration: 0.7, delay: index * 0.2, ease: "easeOut" }}
                 className="group bg-card rounded-2xl border border-border overflow-hidden hover:shadow-xl transition-all duration-500"
               >
                 <div

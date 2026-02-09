@@ -28,9 +28,9 @@ const AboutSection = () => {
 
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              initial={{ opacity: 0, x: -50, rotate: -2 }}
+              animate={isInView ? { opacity: 1, x: 0, rotate: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
             >
               <div className="relative">
                 <div className="w-full aspect-square rounded-2xl overflow-hidden border-4 border-primary/20 shadow-xl">
@@ -47,9 +47,9 @@ const AboutSection = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
+              initial={{ opacity: 0, x: 50 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
               className="space-y-6"
             >
               <p className="text-muted-foreground text-lg leading-relaxed">

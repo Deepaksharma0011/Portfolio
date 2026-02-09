@@ -78,9 +78,9 @@ const SkillsSection = () => {
             {skillCategories.map((category, index) => (
               <motion.div
                 key={category.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                initial={{ opacity: 0, y: 40, scale: 0.9 }}
+                animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+                transition={{ duration: 0.6, delay: index * 0.12, ease: "easeOut" }}
                 className="group p-6 bg-card rounded-2xl border border-border hover:border-primary/30 transition-all duration-300 hover:shadow-lg"
               >
                 <div
