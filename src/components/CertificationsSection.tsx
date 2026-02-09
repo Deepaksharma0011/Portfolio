@@ -8,13 +8,13 @@ const certifications = [
     title: "Data Analyst",
     issuer: "Deloitte",
     badge: "🏆",
-    pdfUrl: "/certificates/deloitte-data-analysis.pdf",
+    pdfUrl: "https://drive.google.com/file/d/13vkygRwSHqmj914_gJVw4UhNSxnmQbiT/view?usp=drive_link",
   },
   {
     title: "Cyber Security",
     issuer: "Deloitte",
     badge: "🔐",
-    pdfUrl: null,
+    pdfUrl: "https://drive.google.com/file/d/1_a_hqb8w9DE4UJPHordLFwPfe93NTazP/view?usp=drive_link",
   },
   {
     title: "Desktop Specialist",
