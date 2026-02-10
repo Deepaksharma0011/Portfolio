@@ -1,20 +1,18 @@
 import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
 import { Mail, Phone, Linkedin, Github, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const ContactSection = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+const viewport = { once: false, margin: "-100px" };
 
+const ContactSection = () => {
   return (
     <section id="contact" className="py-20 md:py-32">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="max-w-4xl mx-auto" ref={ref}>
+        <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={viewport}
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
@@ -32,7 +30,8 @@ const ContactSection = () => {
 
           <motion.div
             initial={{ opacity: 0, y: 50, scale: 0.95 }}
-            animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={viewport}
             transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
             className="bg-card rounded-3xl border border-border p-8 md:p-12"
           >

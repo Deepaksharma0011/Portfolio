@@ -1,6 +1,4 @@
 import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
 import { CheckCircle2, ExternalLink } from "lucide-react";
 
 const certifications = [
@@ -36,17 +34,17 @@ const certifications = [
   },
 ];
 
-const CertificationsSection = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+const viewport = { once: false, margin: "-100px" };
 
+const CertificationsSection = () => {
   return (
     <section id="certifications" className="py-20 md:py-32">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="max-w-6xl mx-auto" ref={ref}>
+        <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={viewport}
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
@@ -77,7 +75,8 @@ const CertificationsSection = () => {
                 <motion.div
                   key={cert.title}
                   initial={{ opacity: 0, y: 30, scale: 0.9 }}
-                  animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={viewport}
                   transition={{ duration: 0.5, delay: index * 0.12, ease: "easeOut" }}
                 >
                   {cert.pdfUrl ? (
