@@ -1,20 +1,18 @@
 import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
 import { GraduationCap, Target, Sparkles } from "lucide-react";
 import profilePhoto from "@/assets/profile-photo.jpg";
 
-const AboutSection = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+const viewport = { once: false, margin: "-100px" };
 
+const AboutSection = () => {
   return (
     <section id="about" className="py-20 md:py-32 bg-secondary/30">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="max-w-6xl mx-auto" ref={ref}>
+        <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={viewport}
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
@@ -29,7 +27,8 @@ const AboutSection = () => {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <motion.div
               initial={{ opacity: 0, x: -50, rotate: -2 }}
-              animate={isInView ? { opacity: 1, x: 0, rotate: 0 } : {}}
+              whileInView={{ opacity: 1, x: 0, rotate: 0 }}
+              viewport={viewport}
               transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
             >
               <div className="relative">
@@ -48,7 +47,8 @@ const AboutSection = () => {
 
             <motion.div
               initial={{ opacity: 0, x: 50 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={viewport}
               transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
               className="space-y-6"
             >

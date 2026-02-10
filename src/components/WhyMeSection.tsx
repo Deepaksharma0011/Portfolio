@@ -1,6 +1,4 @@
 import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
 import { Lightbulb, Target, TrendingUp, CheckCheck } from "lucide-react";
 
 const reasons = [
@@ -30,17 +28,17 @@ const reasons = [
   },
 ];
 
-const WhyMeSection = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+const viewport = { once: false, margin: "-100px" };
 
+const WhyMeSection = () => {
   return (
     <section className="py-20 md:py-32 bg-secondary/30">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="max-w-6xl mx-auto" ref={ref}>
+        <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={viewport}
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
@@ -57,7 +55,8 @@ const WhyMeSection = () => {
               <motion.div
                 key={reason.title}
                 initial={{ opacity: 0, x: index % 2 === 0 ? -40 : 40, y: 20 }}
-                animate={isInView ? { opacity: 1, x: 0, y: 0 } : {}}
+                whileInView={{ opacity: 1, x: 0, y: 0 }}
+                viewport={viewport}
                 transition={{ duration: 0.6, delay: index * 0.15, ease: "easeOut" }}
                 className="flex gap-5 p-6 bg-card rounded-2xl border border-border hover:shadow-lg transition-all duration-300"
               >
