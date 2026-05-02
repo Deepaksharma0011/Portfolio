@@ -31,7 +31,13 @@ const AboutSection = () => {
               viewport={viewport}
               transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
             >
-              <div className="relative">
+              <motion.div
+                className="relative"
+                animate={{ y: [0, -12, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                whileHover={{ scale: 1.03 }}
+              >
+                <div className="absolute inset-0 rounded-2xl bg-primary/30 blur-2xl -z-10" />
                 <div className="w-full aspect-square rounded-2xl overflow-hidden border-4 border-primary/20 shadow-xl">
                   <img 
                     src={profilePhoto} 
@@ -39,10 +45,14 @@ const AboutSection = () => {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-primary rounded-xl flex items-center justify-center shadow-glow">
+                <motion.div
+                  className="absolute -bottom-4 -right-4 w-24 h-24 bg-primary rounded-xl flex items-center justify-center shadow-glow"
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                >
                   <Sparkles className="text-primary-foreground" size={40} />
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </motion.div>
 
             <motion.div

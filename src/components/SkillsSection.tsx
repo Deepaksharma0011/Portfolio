@@ -80,10 +80,11 @@ const SkillsSection = () => {
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={viewport}
                 transition={{ duration: 0.6, delay: index * 0.12, ease: "easeOut" }}
-                className="group p-6 bg-card rounded-2xl border border-border hover:border-primary/30 transition-all duration-300 hover:shadow-lg"
+                whileHover={{ y: -8, scale: 1.03 }}
+                className="group p-6 bg-card rounded-2xl border border-border hover:border-primary/50 card-lift shimmer-border"
               >
                 <div
-                  className={`w-14 h-14 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300`}
+                  className={`w-14 h-14 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center mb-5 group-hover:scale-125 group-hover:rotate-6 transition-transform duration-500 shadow-lg`}
                 >
                   <category.icon className="text-white" size={28} />
                 </div>
