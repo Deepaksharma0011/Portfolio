@@ -78,7 +78,7 @@ const HeroSection = () => {
             className="mt-16 flex items-center justify-center gap-8 text-muted-foreground"
           >
             <div className="text-center">
-              <p className="text-3xl font-bold text-foreground">8.44</p>
+              <p className="text-3xl font-bold text-foreground">8.6</p>
               <p className="text-sm">CGPA</p>
             </div>
             <div className="w-px h-12 bg-border" />
