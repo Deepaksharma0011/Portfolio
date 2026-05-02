@@ -96,7 +96,7 @@ const AboutSection = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold text-foreground">CGPA</h4>
-                    <p className="text-sm text-muted-foreground">8.44 / 10</p>
+                    <p className="text-sm text-muted-foreground">8.6 / 10</p>
                     <p className="text-xs text-muted-foreground">Current Score</p>
                   </div>
                 </div>
