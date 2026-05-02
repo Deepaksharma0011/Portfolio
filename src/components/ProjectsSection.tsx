@@ -65,13 +65,15 @@ const ProjectsSection = () => {
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={viewport}
                 transition={{ duration: 0.7, delay: index * 0.2, ease: "easeOut" }}
-                className="group bg-card rounded-2xl border border-border overflow-hidden hover:shadow-xl transition-all duration-500"
+                whileHover={{ y: -10, rotateX: 2, rotateY: -2 }}
+                style={{ transformPerspective: 1000 }}
+                className="group bg-card rounded-2xl border border-border overflow-hidden card-lift shimmer-border"
               >
                 <div
                   className={`h-48 bg-gradient-to-br ${project.color} flex items-center justify-center relative overflow-hidden`}
                 >
                   <project.icon
-                    className="text-white/90 group-hover:scale-110 transition-transform duration-500"
+                    className="text-white/90 group-hover:scale-125 group-hover:rotate-12 transition-all duration-500"
                     size={64}
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />

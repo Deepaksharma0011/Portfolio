@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 const HeroSection = () => {
   return (
     <section className="min-h-screen flex items-center justify-center pt-20 pb-10 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+      {/* Animated background blobs */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-float-slow" />
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-float" style={{ animationDelay: "2s" }} />
       </div>
 
       <div className="container mx-auto px-4 md:px-6">
@@ -29,7 +30,7 @@ const HeroSection = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-4 leading-tight"
           >
-            <span className="gradient-text">Deepak Sharma</span>
+            <span className="gradient-text animate-gradient" style={{ backgroundImage: "linear-gradient(135deg, hsl(239 84% 67%), hsl(280 84% 65%), hsl(200 84% 65%), hsl(239 84% 67%))" }}>Deepak Sharma</span>
           </motion.h1>
 
           <motion.h2

@@ -60,7 +60,13 @@ const CertificationsSection = () => {
             {certifications.map((cert, index) => {
               const CardContent = (
                 <>
-                  <div className="text-3xl">{cert.badge}</div>
+                  <motion.div
+                    className="text-3xl"
+                    animate={{ rotate: [0, -8, 8, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: index * 0.3, ease: "easeInOut" }}
+                  >
+                    {cert.badge}
+                  </motion.div>
                   <div>
                     <h4 className="font-semibold text-foreground">{cert.title}</h4>
                     <p className="text-sm text-muted-foreground flex items-center gap-1">
@@ -78,6 +84,8 @@ const CertificationsSection = () => {
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={viewport}
                   transition={{ duration: 0.5, delay: index * 0.12, ease: "easeOut" }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  whileTap={{ scale: 0.97 }}
                 >
                   {cert.pdfUrl ? (
                     <a
