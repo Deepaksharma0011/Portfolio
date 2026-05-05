@@ -3,7 +3,7 @@ import { CheckCircle2, ExternalLink } from "lucide-react";
 
 const certifications = [
   {
-    title: "Data Analyst",
+    title: "Data Analyst Job",
     issuer: "Deloitte",
     badge: "🏆",
     pdfUrl: "https://drive.google.com/file/d/13vkygRwSHqmj914_gJVw4UhNSxnmQbiT/view?usp=drive_link",
@@ -15,22 +15,16 @@ const certifications = [
     pdfUrl: "https://drive.google.com/file/d/1_a_hqb8w9DE4UJPHordLFwPfe93NTazP/view?usp=drive_link",
   },
   {
-    title: "Desktop Specialist",
-    issuer: "Tableau",
+    title: "Tableau And PowerBI",
+    issuer: "Upflairs",
     badge: "📊",
-    pdfUrl: null,
+    pdfUrl: "https://drive.google.com/file/d/1UbE64ZzVcnG8Q_2Nv5tWORKAXSoipPML/view?usp=sharing",
   },
   {
-    title: "Power BI Certification",
-    issuer: "Upflairs",
-    badge: "📈",
-    pdfUrl: null,
-  },
-  {
-    title: "Machine Learning",
-    issuer: "Upflairs",
-    badge: "🤖",
-    pdfUrl: null,
+    title: "SQL Advance",
+    issuer: "HackerRank",
+    badge: "🛢️",
+    pdfUrl: "https://drive.google.com/file/d/10SPpiHwDiCAhf8udAqXM_rHQDakYF9h1/view?usp=sharing",
   },
 ];
 
