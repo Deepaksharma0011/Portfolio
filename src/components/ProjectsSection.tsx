@@ -62,19 +62,15 @@ const ProjectsSection = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {projects.map((project, index) => (
-              <motion.a
+              <motion.div
                 key={project.title}
-                href={project.repo}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${project.title} on GitHub`}
                 initial={{ opacity: 0, y: 60, scale: 0.95 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={viewport}
                 transition={{ duration: 0.7, delay: index * 0.2, ease: "easeOut" }}
                 whileHover={{ y: -10, rotateX: 2, rotateY: -2 }}
                 style={{ transformPerspective: 1000 }}
-                className="group block bg-card rounded-2xl border border-border overflow-hidden card-lift shimmer-border cursor-pointer"
+                className="group relative bg-card rounded-2xl border border-border overflow-hidden card-lift shimmer-border focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 focus-within:ring-offset-background"
               >
                 <div
                   className={`h-48 bg-gradient-to-br ${project.color} flex items-center justify-center relative overflow-hidden`}
@@ -87,7 +83,7 @@ const ProjectsSection = () => {
                 </div>
 
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold text-foreground mb-3">
+                  <h3 className="text-xl font-semibold text-foreground mb-3 group-hover:text-primary transition-colors">
                     {project.title}
                   </h3>
                   <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
@@ -111,12 +107,25 @@ const ProjectsSection = () => {
                     ))}
                   </div>
 
-                  <Button variant="outline" size="sm" className="w-full pointer-events-none">
-                    <Github size={16} className="mr-2" />
-                    View on GitHub
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full relative z-10 group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-colors"
+                    asChild
+                  >
+                    <a
+                      href={project.repo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`View ${project.title} on GitHub`}
+                      className="before:absolute before:inset-0 before:content-[''] before:z-0 before:rounded-2xl"
+                    >
+                      <Github size={16} className="mr-2" />
+                      View on GitHub
+                    </a>
                   </Button>
                 </div>
-              </motion.a>
+              </motion.div>
             ))}
           </div>
         </div>
