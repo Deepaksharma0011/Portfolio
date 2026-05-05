@@ -1,33 +1,33 @@
 import { motion } from "framer-motion";
-import { ExternalLink, Github, Shield, Newspaper, MessageCircle } from "lucide-react";
+import { ExternalLink, Github, Hand, Smile, Plane } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const projects = [
   {
-    title: "Fake News Detector",
-    icon: Newspaper,
+    title: "Hand Gesture Controller",
+    icon: Hand,
     description:
-      "Built an NLP-based system using Python and spaCy to detect fake news using real-world datasets (LIAR, FakeNewsNet), helping improve content trust and brand credibility.",
-    impact: "Improves content trust & brand credibility",
-    tools: ["Python", "spaCy", "NLP", "Machine Learning"],
+      "Developed a real-time hand gesture recognition system using OpenCV and MediaPipe to control system actions through intuitive hand movements, enabling touch-free human-computer interaction.",
+    impact: "Enables touch-free, accessible device control",
+    tools: ["Python", "OpenCV", "MediaPipe", "Computer Vision"],
     color: "from-blue-500 to-indigo-600",
   },
   {
-    title: "Fraud Detection System",
-    icon: Shield,
+    title: "Face Emotion Detection",
+    icon: Smile,
     description:
-      "Developed a machine learning model trained on 6.3 million transactions to identify fraudulent activity and reduce financial risk.",
-    impact: "Reduces financial risk through early detection",
-    tools: ["Python", "Scikit-learn", "Pandas", "Data Analysis"],
+      "Built a deep learning model using CNNs and TensorFlow to detect human emotions from facial expressions in real time, supporting use cases in customer experience and mental wellness analytics.",
+    impact: "Powers smarter customer & wellness insights",
+    tools: ["Python", "TensorFlow", "Keras", "CNN", "OpenCV"],
     color: "from-indigo-500 to-purple-600",
   },
   {
-    title: "Personal AI Chatbot",
-    icon: MessageCircle,
+    title: "Airline Delay Analysis",
+    icon: Plane,
     description:
-      "Created an NLP-powered chatbot to improve user interaction and automate responses, enhancing customer engagement.",
-    impact: "Automates responses & improves engagement",
-    tools: ["Python", "NLP", "TensorFlow", "API Integration"],
+      "Performed end-to-end data analysis on large-scale airline datasets to uncover delay patterns, root causes, and operational inefficiencies, delivering actionable insights through interactive visualizations.",
+    impact: "Drives data-backed operational improvements",
+    tools: ["Python", "Pandas", "Matplotlib", "Seaborn", "EDA"],
     color: "from-purple-500 to-pink-600",
   },
 ];
