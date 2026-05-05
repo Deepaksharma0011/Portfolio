@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ExternalLink, Github, Hand, Smile, Plane } from "lucide-react";
+import { Github, Hand, Smile, Plane } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const projects = [
@@ -11,6 +11,7 @@ const projects = [
     impact: "Enables touch-free, accessible device control",
     tools: ["Python", "OpenCV", "MediaPipe", "Computer Vision"],
     color: "from-blue-500 to-indigo-600",
+    repo: "https://github.com/Deepaksharma0011/hand-gesture-controller",
   },
   {
     title: "Face Emotion Detection",
@@ -20,6 +21,7 @@ const projects = [
     impact: "Powers smarter customer & wellness insights",
     tools: ["Python", "TensorFlow", "Keras", "CNN", "OpenCV"],
     color: "from-indigo-500 to-purple-600",
+    repo: "https://github.com/Deepaksharma0011/Face-Emotion-Detection",
   },
   {
     title: "Airline Delay Analysis",
@@ -29,6 +31,7 @@ const projects = [
     impact: "Drives data-backed operational improvements",
     tools: ["Python", "Pandas", "Matplotlib", "Seaborn", "EDA"],
     color: "from-purple-500 to-pink-600",
+    repo: "https://github.com/Deepaksharma0011/Airline-Delay-Analysis",
   },
 ];
 
@@ -59,15 +62,19 @@ const ProjectsSection = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {projects.map((project, index) => (
-              <motion.div
+              <motion.a
                 key={project.title}
+                href={project.repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${project.title} on GitHub`}
                 initial={{ opacity: 0, y: 60, scale: 0.95 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={viewport}
                 transition={{ duration: 0.7, delay: index * 0.2, ease: "easeOut" }}
                 whileHover={{ y: -10, rotateX: 2, rotateY: -2 }}
                 style={{ transformPerspective: 1000 }}
-                className="group bg-card rounded-2xl border border-border overflow-hidden card-lift shimmer-border"
+                className="group block bg-card rounded-2xl border border-border overflow-hidden card-lift shimmer-border cursor-pointer"
               >
                 <div
                   className={`h-48 bg-gradient-to-br ${project.color} flex items-center justify-center relative overflow-hidden`}
@@ -104,22 +111,12 @@ const ProjectsSection = () => {
                     ))}
                   </div>
 
-                  <div className="flex gap-3">
-                    <Button variant="outline" size="sm" className="flex-1" asChild>
-                      <a href="https://github.com" target="_blank" rel="noopener noreferrer">
-                        <Github size={16} className="mr-2" />
-                        Code
-                      </a>
-                    </Button>
-                    <Button size="sm" className="flex-1" asChild>
-                      <a href="#" target="_blank" rel="noopener noreferrer">
-                        <ExternalLink size={16} className="mr-2" />
-                        Demo
-                      </a>
-                    </Button>
-                  </div>
+                  <Button variant="outline" size="sm" className="w-full pointer-events-none">
+                    <Github size={16} className="mr-2" />
+                    View on GitHub
+                  </Button>
                 </div>
-              </motion.div>
+              </motion.a>
             ))}
           </div>
         </div>
