@@ -48,18 +48,40 @@ const Navbar = () => {
               {link.label}
             </a>
           ))}
+          <button
+            onClick={toggle}
+            aria-label="Toggle theme"
+            className="w-9 h-9 rounded-lg flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+          >
+            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+          <Button size="sm" variant="outline" asChild>
+            <a href="/Deepak_Sharma_Resume.pdf" download="Deepak_Sharma_Resume.pdf">
+              <Download size={14} className="mr-1" /> Resume
+            </a>
+          </Button>
           <Button size="sm" asChild>
             <a href="#contact">Hire Me</a>
           </Button>
         </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden text-foreground"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        {/* Mobile actions */}
+        <div className="flex md:hidden items-center gap-2">
+          <button
+            onClick={toggle}
+            aria-label="Toggle theme"
+            className="w-9 h-9 rounded-lg flex items-center justify-center text-foreground hover:text-primary"
+          >
+            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+          <button
+            className="text-foreground"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Navigation */}
@@ -76,6 +98,11 @@ const Navbar = () => {
                 {link.label}
               </a>
             ))}
+            <Button size="sm" asChild variant="outline" className="w-full">
+              <a href="/Deepak_Sharma_Resume.pdf" download="Deepak_Sharma_Resume.pdf" onClick={() => setIsMobileMenuOpen(false)}>
+                <Download size={14} className="mr-1" /> Download Resume
+              </a>
+            </Button>
             <Button size="sm" asChild className="w-full">
               <a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>
                 Hire Me
