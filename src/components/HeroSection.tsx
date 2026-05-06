@@ -67,9 +67,11 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="text-2xl md:text-3xl lg:text-4xl font-semibold text-muted-foreground mb-6"
+            className="text-2xl md:text-3xl lg:text-4xl font-semibold text-muted-foreground mb-6 min-h-[2.5em] sm:min-h-[1.5em]"
           >
-            Turning Data into Decisions
+            <span className="text-foreground">I'm a </span>
+            <span className="gradient-text">{role}</span>
+            <span className="inline-block w-[2px] h-[0.9em] align-middle bg-primary ml-1 animate-pulse" />
           </motion.h2>
 
           <motion.p
@@ -95,9 +97,13 @@ const HeroSection = () => {
               </a>
             </Button>
             <Button variant="heroOutline" size="xl" asChild>
-              <a href="#contact">
-                Contact Me
+              <a href="/Deepak_Sharma_Resume.pdf" download="Deepak_Sharma_Resume.pdf">
+                <Download className="mr-2" size={20} />
+                Download Resume
               </a>
+            </Button>
+            <Button variant="outline" size="xl" asChild>
+              <a href="#contact">Contact Me</a>
             </Button>
           </motion.div>
 
