@@ -1,6 +1,35 @@
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { ArrowRight, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+const ROLES = ["Data Analyst", "AI Engineer", "ML Enthusiast", "Problem Solver"];
+
+const useTypewriter = (words: string[], typeSpeed = 90, deleteSpeed = 45, pause = 1400) => {
+  const [text, setText] = useState("");
+  const [i, setI] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    const word = words[i % words.length];
+    const done = !deleting && text === word;
+    const empty = deleting && text === "";
+    const delay = done ? pause : empty ? 300 : deleting ? deleteSpeed : typeSpeed;
+
+    const t = setTimeout(() => {
+      if (done) setDeleting(true);
+      else if (empty) {
+        setDeleting(false);
+        setI((v) => v + 1);
+      } else {
+        setText(deleting ? word.slice(0, text.length - 1) : word.slice(0, text.length + 1));
+      }
+    }, delay);
+    return () => clearTimeout(t);
+  }, [text, deleting, i, words, typeSpeed, deleteSpeed, pause]);
+
+  return text;
+};
 
 const HeroSection = () => {
   return (
