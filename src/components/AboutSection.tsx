@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { GraduationCap, Target, Sparkles } from "lucide-react";
-import profilePhoto from "@/assets/profile-photo.jpg";
+import profilePhoto from "@/assets/deepak-headshot.png";
 
 const viewport = { once: false, margin: "-100px" };
 

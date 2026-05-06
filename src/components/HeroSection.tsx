@@ -1,8 +1,38 @@
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { ArrowRight, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+const ROLES = ["Data Analyst", "AI Engineer", "ML Enthusiast", "Problem Solver"];
+
+const useTypewriter = (words: string[], typeSpeed = 90, deleteSpeed = 45, pause = 1400) => {
+  const [text, setText] = useState("");
+  const [i, setI] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    const word = words[i % words.length];
+    const done = !deleting && text === word;
+    const empty = deleting && text === "";
+    const delay = done ? pause : empty ? 300 : deleting ? deleteSpeed : typeSpeed;
+
+    const t = setTimeout(() => {
+      if (done) setDeleting(true);
+      else if (empty) {
+        setDeleting(false);
+        setI((v) => v + 1);
+      } else {
+        setText(deleting ? word.slice(0, text.length - 1) : word.slice(0, text.length + 1));
+      }
+    }, delay);
+    return () => clearTimeout(t);
+  }, [text, deleting, i, words, typeSpeed, deleteSpeed, pause]);
+
+  return text;
+};
+
 const HeroSection = () => {
+  const role = useTypewriter(ROLES);
   return (
     <section className="min-h-screen flex items-center justify-center pt-20 pb-10 relative overflow-hidden">
       {/* Animated background blobs */}
@@ -37,9 +67,11 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="text-2xl md:text-3xl lg:text-4xl font-semibold text-muted-foreground mb-6"
+            className="text-2xl md:text-3xl lg:text-4xl font-semibold text-muted-foreground mb-6 min-h-[2.5em] sm:min-h-[1.5em]"
           >
-            Turning Data into Decisions
+            <span className="text-foreground">I'm a </span>
+            <span className="gradient-text">{role}</span>
+            <span className="inline-block w-[2px] h-[0.9em] align-middle bg-primary ml-1 animate-pulse" />
           </motion.h2>
 
           <motion.p
@@ -65,9 +97,13 @@ const HeroSection = () => {
               </a>
             </Button>
             <Button variant="heroOutline" size="xl" asChild>
-              <a href="#contact">
-                Contact Me
+              <a href="/Deepak_Sharma_Resume.pdf" download="Deepak_Sharma_Resume.pdf">
+                <Download className="mr-2" size={20} />
+                Download Resume
               </a>
+            </Button>
+            <Button variant="outline" size="xl" asChild>
+              <a href="#contact">Contact Me</a>
             </Button>
           </motion.div>
 
