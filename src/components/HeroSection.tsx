@@ -32,7 +32,7 @@ const useTypewriter = (words: string[], typeSpeed = 90, deleteSpeed = 45, pause 
 };
 
 const HeroSection = () => {
-  return (
+  const role = useTypewriter(ROLES);
     <section className="min-h-screen flex items-center justify-center pt-20 pb-10 relative overflow-hidden">
       {/* Animated background blobs */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
