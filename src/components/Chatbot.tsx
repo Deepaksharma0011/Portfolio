@@ -8,9 +8,9 @@ type Msg = { role: "user" | "assistant"; content: string };
 
 const STARTERS = [
   "What projects has Deepak built?",
+  "Show his computer vision work",
   "Is Deepak available for freelance?",
-  "What are Deepak's top skills?",
-  "How can I contact Deepak?",
+  "What are his top data skills?",
 ];
 
 const Chatbot = () => {
