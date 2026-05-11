@@ -3,6 +3,12 @@ import { CheckCircle2, ExternalLink } from "lucide-react";
 
 const certifications = [
   {
+    title: "Data Analyst Professional Certificate",
+    issuer: "IBM",
+    badge: "🎓",
+    pdfUrl: "https://drive.google.com/file/d/19dXycvC7jzlEHp8_wD-TrgVv90vcYAoF/view?usp=sharing",
+  },
+  {
     title: "Data Analyst Job",
     issuer: "Deloitte",
     badge: "🏆",
