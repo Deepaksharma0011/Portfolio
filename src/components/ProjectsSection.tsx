@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Github, Hand, Smile, Plane } from "lucide-react";
+import { Github, Hand, Smile, Plane, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const projects = [
@@ -32,6 +32,16 @@ const projects = [
     tools: ["Python", "Pandas", "Matplotlib", "Seaborn", "EDA"],
     color: "from-purple-500 to-pink-600",
     repo: "https://github.com/Deepaksharma0011/Airline-Delay-Analysis",
+  },
+  {
+    title: "Covid-19 Analysis",
+    icon: Activity,
+    description:
+      "Analyzed global COVID-19 datasets to track infection trends, recovery rates, and regional impact, transforming raw pandemic data into clear, actionable visual insights.",
+    impact: "Turns pandemic data into clear public-health insights",
+    tools: ["Python", "Pandas", "NumPy", "Matplotlib", "Seaborn", "EDA"],
+    color: "from-pink-500 to-rose-600",
+    repo: "https://github.com/Deepaksharma0011/COVID-19-Analysis",
   },
 ];
 
