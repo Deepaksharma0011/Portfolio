@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { CheckCircle2, ExternalLink } from "lucide-react";
+import { CheckCircle2, ExternalLink, Eye } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const certifications = [
   {
@@ -34,19 +35,19 @@ const certifications = [
   },
   {
     title: "Software Engineer Intern",
-    issuer: "HackerRank (May 2026)",
+    issuer: "HackerRank",
     badge: "💻",
     pdfUrl: "https://drive.google.com/file/d/13UH9cMt5c7GoTjaRp2WjYNzU9tUaawP_/view?usp=sharing",
   },
   {
     title: "NLP, Deep Learning & GPT Technologies",
-    issuer: "SkillOceans (Sept 2025) - 30 days Industrial Training",
+    issuer: "SkillOceans",
     badge: "🧠",
     pdfUrl: "https://drive.google.com/file/d/1eq-ZoAfudla5mOELKApYC_9O37tmv8gm/view?usp=sharing",
   },
   {
     title: "Power BI Micro Course",
-    issuer: "SkillCourse (May 2026)",
+    issuer: "SkillCourse",
     badge: "📈",
     pdfUrl: "https://drive.google.com/file/d/1jyw4MpcdnFFYqH0gqT_25mnVzDU_wYIz/view?usp=sharing",
   },
@@ -75,9 +76,18 @@ const CertificationsSection = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {certifications.map((cert, index) => {
-              const CardContent = (
-                <>
+            {certifications.map((cert, index) => (
+              <motion.div
+                key={cert.title}
+                initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={viewport}
+                transition={{ duration: 0.5, delay: index * 0.12, ease: "easeOut" }}
+                whileHover={{ scale: 1.03, y: -5 }}
+                whileTap={{ scale: 0.97 }}
+                className="flex flex-col gap-3 p-5 bg-card rounded-xl border border-border hover:border-primary/30 hover:shadow-md transition-all duration-300"
+              >
+                <div className="flex items-center gap-4">
                   <motion.div
                     className="text-3xl"
                     animate={{ rotate: [0, -8, 8, 0] }}
@@ -92,37 +102,23 @@ const CertificationsSection = () => {
                       {cert.issuer}
                     </p>
                   </div>
-                </>
-              );
-
-              return (
-                <motion.div
-                  key={cert.title}
-                  initial={{ opacity: 0, y: 30, scale: 0.9 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={viewport}
-                  transition={{ duration: 0.5, delay: index * 0.12, ease: "easeOut" }}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  whileTap={{ scale: 0.97 }}
-                >
-                  {cert.pdfUrl ? (
+                </div>
+                {cert.pdfUrl && (
+                  <Button variant="outline" size="sm" asChild className="w-full mt-1">
                     <a
                       href={cert.pdfUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-4 p-5 bg-card rounded-xl border border-border hover:border-primary/30 hover:shadow-md transition-all duration-300 cursor-pointer group"
+                      className="flex items-center justify-center gap-2"
                     >
-                      {CardContent}
-                      <ExternalLink size={16} className="ml-auto text-muted-foreground group-hover:text-primary transition-colors" />
+                      <Eye size={16} />
+                      View Certificate
+                      <ExternalLink size={14} />
                     </a>
-                  ) : (
-                    <div className="flex items-center gap-4 p-5 bg-card rounded-xl border border-border hover:border-primary/30 hover:shadow-md transition-all duration-300">
-                      {CardContent}
-                    </div>
-                  )}
-                </motion.div>
-              );
-            })}
+                  </Button>
+                )}
+              </motion.div>
+            ))}
           </div>
         </div>
       </div>
