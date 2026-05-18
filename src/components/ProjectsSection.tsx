@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Github, Hand, Smile, Plane, Activity } from "lucide-react";
+import { Github, Hand, Smile, Plane, Activity, TrendingUp, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const projects = [
