@@ -35,19 +35,19 @@ const certifications = [
   },
   {
     title: "Software Engineer Intern",
-    issuer: "HackerRank (May 2026)",
+    issuer: "HackerRank",
     badge: "💻",
     pdfUrl: "https://drive.google.com/file/d/13UH9cMt5c7GoTjaRp2WjYNzU9tUaawP_/view?usp=sharing",
   },
   {
     title: "NLP, Deep Learning & GPT Technologies",
-    issuer: "SkillOceans (Sept 2025) - 30 days Industrial Training",
+    issuer: "SkillOceans",
     badge: "🧠",
     pdfUrl: "https://drive.google.com/file/d/1eq-ZoAfudla5mOELKApYC_9O37tmv8gm/view?usp=sharing",
   },
   {
     title: "Power BI Micro Course",
-    issuer: "SkillCourse (May 2026)",
+    issuer: "SkillCourse",
     badge: "📈",
     pdfUrl: "https://drive.google.com/file/d/1jyw4MpcdnFFYqH0gqT_25mnVzDU_wYIz/view?usp=sharing",
   },
