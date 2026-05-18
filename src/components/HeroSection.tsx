@@ -119,7 +119,7 @@ const HeroSection = () => {
             </div>
             <div className="w-px h-12 bg-border" />
             <div className="text-center">
-              <p className="text-3xl font-bold text-foreground">3+</p>
+              <p className="text-3xl font-bold text-foreground">5+</p>
               <p className="text-sm">Projects</p>
             </div>
             <div className="w-px h-12 bg-border" />
