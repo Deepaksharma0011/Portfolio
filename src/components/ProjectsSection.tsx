@@ -43,6 +43,26 @@ const projects = [
     color: "from-pink-500 to-rose-600",
     repo: "https://github.com/Deepaksharma0011/COVID-19-Analysis",
   },
+  {
+    title: "TCS Stock Price Prediction using LSTM",
+    icon: TrendingUp,
+    description:
+      "Built a deep learning LSTM model to predict TCS stock prices using 5 years of historical data. Forecasted next 30 days of stock prices with RMSE, MAE, R\u00b2 evaluation.",
+    impact: "Empowers data-driven investment decisions with AI forecasting",
+    tools: ["Python", "TensorFlow", "Keras", "LSTM", "yfinance", "Pandas", "Matplotlib"],
+    color: "from-emerald-500 to-green-600",
+    repo: "https://github.com/Deepaksharma0011/CODING-SAMURAI-INTERNSHIP-TASK",
+  },
+  {
+    title: "Twitter Sentiment Analysis using NLP",
+    icon: MessageSquare,
+    description:
+      "Performed sentiment analysis on 74,000+ real tweets. Classified tweets as Positive, Negative, or Neutral using TF-IDF vectorization and Logistic Regression.",
+    impact: "Transforms social chatter into actionable brand & market insights",
+    tools: ["Python", "NLTK", "TextBlob", "TF-IDF", "Scikit-learn", "WordCloud", "Seaborn"],
+    color: "from-sky-500 to-blue-600",
+    repo: "https://github.com/Deepaksharma0011/CODING-SAMURAI-INTERNSHIP-TASK",
+  },
 ];
 
 const viewport = { once: false, margin: "-100px" };
