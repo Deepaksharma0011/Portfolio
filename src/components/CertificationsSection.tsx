@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { CheckCircle2, ExternalLink } from "lucide-react";
+import { CheckCircle2, ExternalLink, Eye } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const certifications = [
   {
