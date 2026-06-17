@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useSpring } from "framer-motion";
 
 interface TrailParticle {
   id: number;
@@ -18,12 +17,14 @@ const TRAIL_COLORS = [
   "236, 72, 153",   // pink
   "16, 185, 129",   // emerald
   "245, 158, 11",   // amber
+  "99, 102, 241",   // indigo
+  "14, 165, 233",   // sky
+  "244, 114, 182",  // rose
 ];
 
 const CursorAnimation = () => {
   const [enabled, setEnabled] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [isMoving, setIsMoving] = useState(false);
   const moveTimeoutRef = useRef<number | null>(null);
   const particlesRef = useRef<TrailParticle[]>([]);
   const particleIdRef = useRef(0);
@@ -33,10 +34,6 @@ const CursorAnimation = () => {
   const mousePosRef = useRef({ x: 0, y: 0 });
   const isMovingRef = useRef(false);
   const idleAngleRef = useRef(0);
-
-  const springConfig = { damping: 25, stiffness: 300, mass: 0.5 };
-  const cursorX = useSpring(0, springConfig);
-  const cursorY = useSpring(0, springConfig);
 
   // Detect device capabilities on mount (runs once on client)
   useEffect(() => {
@@ -67,19 +64,16 @@ const CursorAnimation = () => {
       const prev = lastMouseRef.current;
       const dt = Math.max(now - prev.time, 1);
 
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
       mousePosRef.current = { x: e.clientX, y: e.clientY };
       setIsVisible(true);
-      setIsMoving(true);
       isMovingRef.current = true;
 
       const vx = ((e.clientX - prev.x) / dt) * 12;
       const vy = ((e.clientY - prev.y) / dt) * 12;
 
       const distance = Math.hypot(e.clientX - prev.x, e.clientY - prev.y);
-      if (distance > 3) {
-        const count = Math.min(Math.floor(distance / 4), 4);
+      if (distance > 2) {
+        const count = Math.min(Math.floor(distance / 2.5), 8);
         for (let i = 0; i < count; i++) {
           const t = i / count;
           const px = prev.x + (e.clientX - prev.x) * t;
@@ -88,10 +82,10 @@ const CursorAnimation = () => {
             id: particleIdRef.current++,
             x: px,
             y: py,
-            vx: vx + (Math.random() - 0.5) * 1.5,
-            vy: vy + (Math.random() - 0.5) * 1.5,
+            vx: vx + (Math.random() - 0.5) * 2,
+            vy: vy + (Math.random() - 0.5) * 2,
             life: 1,
-            size: 1.5 + Math.random() * 2,
+            size: 1.5 + Math.random() * 2.5,
             color: TRAIL_COLORS[particleIdRef.current % TRAIL_COLORS.length],
           });
         }
@@ -101,9 +95,8 @@ const CursorAnimation = () => {
 
       if (moveTimeoutRef.current) window.clearTimeout(moveTimeoutRef.current);
       moveTimeoutRef.current = window.setTimeout(() => {
-        setIsMoving(false);
         isMovingRef.current = false;
-      }, 140);
+      }, 160);
     };
 
     const handleMouseLeave = () => setIsVisible(false);
@@ -116,55 +109,85 @@ const CursorAnimation = () => {
       const particles = particlesRef.current;
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
-        p.life -= 0.025;
+        p.life -= 0.022;
         p.x += p.vx;
         p.y += p.vy;
-        p.vx *= 0.95;
-        p.vy *= 0.95;
+        p.vx *= 0.96;
+        p.vy *= 0.96;
 
         if (p.life <= 0) {
           particles.splice(i, 1);
           continue;
         }
 
-        const opacity = p.life * 0.7;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${p.color}, ${opacity})`;
-        ctx.fill();
+        const opacity = p.life * 0.8;
 
+        // Draw stretched line trail between consecutive particles
         const next = particles[i - 1];
-        if (next && next.color === p.color) {
+        if (next) {
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
-          ctx.lineTo(next.x, next.y);
-          ctx.strokeStyle = `rgba(${p.color}, ${opacity * 0.5})`;
-          ctx.lineWidth = p.size * 0.5 * p.life;
+          const midX = (p.x + next.x) / 2;
+          const midY = (p.y + next.y) / 2;
+          ctx.quadraticCurveTo(midX, midY, next.x, next.y);
+          ctx.strokeStyle = `rgba(${p.color}, ${opacity * 0.7})`;
+          ctx.lineWidth = p.size * 0.8 * p.life;
+          ctx.lineCap = "round";
+          ctx.lineJoin = "round";
           ctx.stroke();
         }
+
+        // Draw particle dot
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * p.life * 0.6, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${p.color}, ${opacity})`;
+        ctx.fill();
       }
 
-      // Idle: rotating multi-colored orbiting lines around cursor
+      // Cursor position dot (subtle glow)
+      const { x: cx, y: cy } = mousePosRef.current;
+      if (isVisible) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(139, 92, 246, 0.9)";
+        ctx.shadowColor = "rgba(139, 92, 246, 0.8)";
+        ctx.shadowBlur = 12;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
+      // Idle: long rotating multi-colored lines around cursor
       if (!isMovingRef.current && isVisible) {
         const { x: cx, y: cy } = mousePosRef.current;
-        idleAngleRef.current += 0.015;
+        idleAngleRef.current += 0.012;
         const baseAngle = idleAngleRef.current;
-        const radius = 26;
-        const lineCount = TRAIL_COLORS.length;
-        const arcSpan = (Math.PI * 2) / lineCount * 0.55;
+        const innerRadius = 18;
+        const outerRadius = 55;       // longer lines
+        const lineCount = 16;         // more lines
+        const arcSpan = (Math.PI * 2) / lineCount * 0.65;
 
         for (let i = 0; i < lineCount; i++) {
-          const color = TRAIL_COLORS[i];
-          const startAngle =
-            baseAngle + (i * Math.PI * 2) / lineCount + (i % 2 === 0 ? 0 : -baseAngle * 2);
+          const color = TRAIL_COLORS[i % TRAIL_COLORS.length];
+          const angleOffset = (i * Math.PI * 2) / lineCount;
+          const startAngle = baseAngle + angleOffset;
           const endAngle = startAngle + arcSpan;
 
           ctx.beginPath();
-          ctx.arc(cx, cy, radius + (i % 2) * 4, startAngle, endAngle);
+          ctx.arc(cx, cy, innerRadius + (i % 3) * 10, startAngle, endAngle);
           ctx.strokeStyle = `rgba(${color}, 0.85)`;
-          ctx.lineWidth = 2;
+          ctx.lineWidth = 2.5;
           ctx.lineCap = "round";
-          ctx.shadowColor = `rgba(${color}, 0.8)`;
+          ctx.shadowColor = `rgba(${color}, 0.9)`;
+          ctx.shadowBlur = 12;
+          ctx.stroke();
+
+          // Outer longer arc
+          ctx.beginPath();
+          ctx.arc(cx, cy, outerRadius + (i % 2) * 8, -baseAngle * 1.2 + angleOffset, -baseAngle * 1.2 + angleOffset + arcSpan * 1.3);
+          ctx.strokeStyle = `rgba(${color}, 0.6)`;
+          ctx.lineWidth = 1.5;
+          ctx.lineCap = "round";
+          ctx.shadowColor = `rgba(${color}, 0.7)`;
           ctx.shadowBlur = 8;
           ctx.stroke();
         }
@@ -187,41 +210,16 @@ const CursorAnimation = () => {
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
       if (moveTimeoutRef.current) window.clearTimeout(moveTimeoutRef.current);
     };
-  }, [enabled, cursorX, cursorY, isVisible]);
+  }, [enabled, isVisible]);
 
   if (!enabled) return null;
 
   return (
-    <>
-      <canvas
-        ref={canvasRef}
-        className="fixed inset-0 pointer-events-none z-[9998]"
-        aria-hidden="true"
-      />
-      <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9999]"
-        style={{ x: cursorX, y: cursorY, translateX: "-50%", translateY: "-50%" }}
-        animate={{ opacity: isVisible ? 1 : 0, scale: isMoving ? 0.6 : 1 }}
-        transition={{ duration: 0.15 }}
-      >
-        <div
-          className={`rounded-full border border-primary/60 transition-all duration-150 ${
-            isMoving ? "w-6 h-6" : "w-10 h-10"
-          }`}
-          style={{
-            boxShadow: isMoving
-              ? "0 0 20px -5px hsl(239 84% 67% / 0.4)"
-              : "0 0 30px -5px hsl(239 84% 67% / 0.5)",
-          }}
-        />
-      </motion.div>
-      <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9999] w-1.5 h-1.5 rounded-full bg-primary"
-        style={{ x: cursorX, y: cursorY, translateX: "-50%", translateY: "-50%" }}
-        animate={{ opacity: isVisible ? 1 : 0 }}
-        transition={{ duration: 0.1 }}
-      />
-    </>
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 pointer-events-none z-[9998]"
+      aria-hidden="true"
+    />
   );
 };
 
