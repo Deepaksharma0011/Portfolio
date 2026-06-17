@@ -144,6 +144,18 @@ const CursorAnimation = () => {
         ctx.fill();
       }
 
+      // Cursor position dot (subtle glow)
+      const { x: cx, y: cy } = mousePosRef.current;
+      if (isVisible) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(139, 92, 246, 0.9)";
+        ctx.shadowColor = "rgba(139, 92, 246, 0.8)";
+        ctx.shadowBlur = 12;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
       // Idle: long rotating multi-colored lines around cursor
       if (!isMovingRef.current && isVisible) {
         const { x: cx, y: cy } = mousePosRef.current;
