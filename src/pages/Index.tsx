@@ -7,6 +7,8 @@ import CertificationsSection from "@/components/CertificationsSection";
 import WhyMeSection from "@/components/WhyMeSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
+import CursorAnimation from "@/components/CursorAnimation";
+
 
 const Index = () => {
   return (
