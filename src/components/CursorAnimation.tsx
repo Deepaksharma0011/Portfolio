@@ -8,11 +8,20 @@ interface TrailParticle {
   vx: number;
   vy: number;
   life: number;
-  maxLife: number;
   size: number;
+  color: string;
 }
 
+const TRAIL_COLORS = [
+  "139, 92, 246",   // violet
+  "59, 130, 246",   // blue
+  "236, 72, 153",   // pink
+  "16, 185, 129",   // emerald
+  "245, 158, 11",   // amber
+];
+
 const CursorAnimation = () => {
+  const [enabled, setEnabled] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isMoving, setIsMoving] = useState(false);
   const moveTimeoutRef = useRef<number | null>(null);
@@ -21,24 +30,26 @@ const CursorAnimation = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number | null>(null);
   const lastMouseRef = useRef({ x: 0, y: 0, time: 0 });
-  const isTouchRef = useRef(false);
+  const mousePosRef = useRef({ x: 0, y: 0 });
+  const isMovingRef = useRef(false);
+  const idleAngleRef = useRef(0);
 
   const springConfig = { damping: 25, stiffness: 300, mass: 0.5 };
   const cursorX = useSpring(0, springConfig);
   const cursorY = useSpring(0, springConfig);
 
+  // Detect device capabilities on mount (runs once on client)
   useEffect(() => {
-    // Disable on touch devices
-    if (window.matchMedia("(pointer: coarse)").matches) {
-      isTouchRef.current = true;
-      return;
-    }
+    const isTouch =
+      window.matchMedia("(pointer: coarse)").matches ||
+      !window.matchMedia("(pointer: fine)").matches ||
+      "ontouchstart" in window;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!isTouch && !reducedMotion) setEnabled(true);
+  }, []);
 
-    // Respect reduced motion preference
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return;
-    }
-
+  useEffect(() => {
+    if (!enabled) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -58,14 +69,14 @@ const CursorAnimation = () => {
 
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
+      mousePosRef.current = { x: e.clientX, y: e.clientY };
       setIsVisible(true);
       setIsMoving(true);
+      isMovingRef.current = true;
 
-      // Calculate velocity for particle direction
       const vx = ((e.clientX - prev.x) / dt) * 12;
       const vy = ((e.clientY - prev.y) / dt) * 12;
 
-      // Add trail particles when moving fast enough
       const distance = Math.hypot(e.clientX - prev.x, e.clientY - prev.y);
       if (distance > 3) {
         const count = Math.min(Math.floor(distance / 4), 4);
@@ -80,34 +91,28 @@ const CursorAnimation = () => {
             vx: vx + (Math.random() - 0.5) * 1.5,
             vy: vy + (Math.random() - 0.5) * 1.5,
             life: 1,
-            maxLife: 1,
             size: 1.5 + Math.random() * 2,
+            color: TRAIL_COLORS[particleIdRef.current % TRAIL_COLORS.length],
           });
         }
       }
 
       lastMouseRef.current = { x: e.clientX, y: e.clientY, time: now };
 
-      if (moveTimeoutRef.current) {
-        window.clearTimeout(moveTimeoutRef.current);
-      }
+      if (moveTimeoutRef.current) window.clearTimeout(moveTimeoutRef.current);
       moveTimeoutRef.current = window.setTimeout(() => {
         setIsMoving(false);
-      }, 120);
+        isMovingRef.current = false;
+      }, 140);
     };
 
-    const handleMouseLeave = () => {
-      setIsVisible(false);
-    };
-
-    const handleMouseEnter = () => {
-      setIsVisible(true);
-    };
+    const handleMouseLeave = () => setIsVisible(false);
+    const handleMouseEnter = () => setIsVisible(true);
 
     const render = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Update and draw particles
+      // Moving trail particles
       const particles = particlesRef.current;
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
@@ -122,22 +127,48 @@ const CursorAnimation = () => {
           continue;
         }
 
-        const opacity = p.life * 0.6;
+        const opacity = p.life * 0.7;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(139, 92, 246, ${opacity})`;
+        ctx.fillStyle = `rgba(${p.color}, ${opacity})`;
         ctx.fill();
 
-        // Draw line to next particle for trail effect
         const next = particles[i - 1];
-        if (next) {
+        if (next && next.color === p.color) {
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(next.x, next.y);
-          ctx.strokeStyle = `rgba(139, 92, 246, ${opacity * 0.5})`;
+          ctx.strokeStyle = `rgba(${p.color}, ${opacity * 0.5})`;
           ctx.lineWidth = p.size * 0.5 * p.life;
           ctx.stroke();
         }
+      }
+
+      // Idle: rotating multi-colored orbiting lines around cursor
+      if (!isMovingRef.current && isVisible) {
+        const { x: cx, y: cy } = mousePosRef.current;
+        idleAngleRef.current += 0.015;
+        const baseAngle = idleAngleRef.current;
+        const radius = 26;
+        const lineCount = TRAIL_COLORS.length;
+        const arcSpan = (Math.PI * 2) / lineCount * 0.55;
+
+        for (let i = 0; i < lineCount; i++) {
+          const color = TRAIL_COLORS[i];
+          const startAngle =
+            baseAngle + (i * Math.PI * 2) / lineCount + (i % 2 === 0 ? 0 : -baseAngle * 2);
+          const endAngle = startAngle + arcSpan;
+
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius + (i % 2) * 4, startAngle, endAngle);
+          ctx.strokeStyle = `rgba(${color}, 0.85)`;
+          ctx.lineWidth = 2;
+          ctx.lineCap = "round";
+          ctx.shadowColor = `rgba(${color}, 0.8)`;
+          ctx.shadowBlur = 8;
+          ctx.stroke();
+        }
+        ctx.shadowBlur = 0;
       }
 
       animationFrameRef.current = requestAnimationFrame(render);
@@ -153,44 +184,29 @@ const CursorAnimation = () => {
       window.removeEventListener("mousemove", handleMouseMove);
       document.body.removeEventListener("mouseleave", handleMouseLeave);
       document.body.removeEventListener("mouseenter", handleMouseEnter);
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-      if (moveTimeoutRef.current) {
-        window.clearTimeout(moveTimeoutRef.current);
-      }
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+      if (moveTimeoutRef.current) window.clearTimeout(moveTimeoutRef.current);
     };
-  }, [cursorX, cursorY]);
+  }, [enabled, cursorX, cursorY, isVisible]);
 
-  // Don't render on touch devices
-  if (isTouchRef.current) return null;
+  if (!enabled) return null;
 
   return (
     <>
-      {/* Trail canvas */}
       <canvas
         ref={canvasRef}
         className="fixed inset-0 pointer-events-none z-[9998]"
         aria-hidden="true"
       />
-      {/* Cursor ring follower */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none z-[9999]"
-        style={{
-          x: cursorX,
-          y: cursorY,
-          translateX: "-50%",
-          translateY: "-50%",
-        }}
-        animate={{
-          opacity: isVisible ? 1 : 0,
-          scale: isMoving ? 0.6 : 1,
-        }}
+        style={{ x: cursorX, y: cursorY, translateX: "-50%", translateY: "-50%" }}
+        animate={{ opacity: isVisible ? 1 : 0, scale: isMoving ? 0.6 : 1 }}
         transition={{ duration: 0.15 }}
       >
         <div
           className={`rounded-full border border-primary/60 transition-all duration-150 ${
-            isMoving ? "w-6 h-6" : "w-10 h-10 animate-pulse-glow"
+            isMoving ? "w-6 h-6" : "w-10 h-10"
           }`}
           style={{
             boxShadow: isMoving
@@ -199,15 +215,9 @@ const CursorAnimation = () => {
           }}
         />
       </motion.div>
-      {/* Center dot */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none z-[9999] w-1.5 h-1.5 rounded-full bg-primary"
-        style={{
-          x: cursorX,
-          y: cursorY,
-          translateX: "-50%",
-          translateY: "-50%",
-        }}
+        style={{ x: cursorX, y: cursorY, translateX: "-50%", translateY: "-50%" }}
         animate={{ opacity: isVisible ? 1 : 0 }}
         transition={{ duration: 0.1 }}
       />
