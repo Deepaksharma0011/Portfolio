@@ -13,6 +13,7 @@ import CursorAnimation from "@/components/CursorAnimation";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
+      <CursorAnimation />
       <Navbar />
       <main>
         <HeroSection />
