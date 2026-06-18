@@ -1,17 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 
-interface TrailParticle {
+interface OrbitalLine {
   id: number;
+  radius: number;
+  color: string;
+  speed: number;
+  angleOffset: number;
+  arcLength: number;
+  strokeWidth: number;
+  glow: number;
+  lag: number;
   x: number;
   y: number;
-  vx: number;
-  vy: number;
-  life: number;
-  size: number;
-  color: string;
 }
 
-const TRAIL_COLORS = [
+const COLORS = [
   "139, 92, 246",   // violet
   "59, 130, 246",   // blue
   "236, 72, 153",   // pink
@@ -20,22 +23,23 @@ const TRAIL_COLORS = [
   "99, 102, 241",   // indigo
   "14, 165, 233",   // sky
   "244, 114, 182",  // rose
+  "45, 212, 191",   // teal
+  "250, 204, 21",   // yellow
 ];
+
+const LINE_COUNT = 14;
 
 const CursorAnimation = () => {
   const [enabled, setEnabled] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const moveTimeoutRef = useRef<number | null>(null);
-  const particlesRef = useRef<TrailParticle[]>([]);
-  const particleIdRef = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number | null>(null);
-  const lastMouseRef = useRef({ x: 0, y: 0, time: 0 });
-  const mousePosRef = useRef({ x: 0, y: 0 });
-  const isMovingRef = useRef(false);
+  const mouseRef = useRef({ x: 0, y: 0 });
   const idleAngleRef = useRef(0);
+  const linesRef = useRef<OrbitalLine[]>([]);
+  const moveTimeoutRef = useRef<number | null>(null);
+  const isMovingRef = useRef(false);
 
-  // Detect device capabilities on mount (runs once on client)
   useEffect(() => {
     const isTouch =
       window.matchMedia("(pointer: coarse)").matches ||
@@ -59,44 +63,35 @@ const CursorAnimation = () => {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const now = performance.now();
-      const prev = lastMouseRef.current;
-      const dt = Math.max(now - prev.time, 1);
+    // Initialize orbital lines once
+    if (linesRef.current.length === 0) {
+      for (let i = 0; i < LINE_COUNT; i++) {
+        const radius = 22 + i * 10 + (i % 3) * 6;
+        linesRef.current.push({
+          id: i,
+          radius,
+          color: COLORS[i % COLORS.length],
+          speed: (i % 2 === 0 ? 1 : -1) * (0.0003 + i * 0.00008),
+          angleOffset: (i * Math.PI * 2) / LINE_COUNT,
+          arcLength: Math.PI * (0.35 + (i % 3) * 0.12),
+          strokeWidth: 2 + (i % 3) * 0.5,
+          glow: 8 + (i % 3) * 3,
+          lag: 0.04 + (i / LINE_COUNT) * 0.12,
+          x: mouseRef.current.x,
+          y: mouseRef.current.y,
+        });
+      }
+    }
 
-      mousePosRef.current = { x: e.clientX, y: e.clientY };
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseRef.current = { x: e.clientX, y: e.clientY };
       setIsVisible(true);
       isMovingRef.current = true;
-
-      const vx = ((e.clientX - prev.x) / dt) * 12;
-      const vy = ((e.clientY - prev.y) / dt) * 12;
-
-      const distance = Math.hypot(e.clientX - prev.x, e.clientY - prev.y);
-      if (distance > 2) {
-        const count = Math.min(Math.floor(distance / 2.5), 8);
-        for (let i = 0; i < count; i++) {
-          const t = i / count;
-          const px = prev.x + (e.clientX - prev.x) * t;
-          const py = prev.y + (e.clientY - prev.y) * t;
-          particlesRef.current.push({
-            id: particleIdRef.current++,
-            x: px,
-            y: py,
-            vx: vx + (Math.random() - 0.5) * 2,
-            vy: vy + (Math.random() - 0.5) * 2,
-            life: 1,
-            size: 1.5 + Math.random() * 2.5,
-            color: TRAIL_COLORS[particleIdRef.current % TRAIL_COLORS.length],
-          });
-        }
-      }
-
-      lastMouseRef.current = { x: e.clientX, y: e.clientY, time: now };
 
       if (moveTimeoutRef.current) window.clearTimeout(moveTimeoutRef.current);
       moveTimeoutRef.current = window.setTimeout(() => {
         isMovingRef.current = false;
-      }, 160);
+      }, 180);
     };
 
     const handleMouseLeave = () => setIsVisible(false);
@@ -104,93 +99,53 @@ const CursorAnimation = () => {
 
     const render = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const { x: mx, y: my } = mouseRef.current;
+      const target = { x: mx, y: my };
 
-      // Moving trail particles
-      const particles = particlesRef.current;
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.life -= 0.022;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vx *= 0.96;
-        p.vy *= 0.96;
+      // Smoothly move each line's anchor toward the cursor with different lag
+      linesRef.current.forEach((line) => {
+        line.x += (target.x - line.x) * line.lag;
+        line.y += (target.y - line.y) * line.lag;
+      });
 
-        if (p.life <= 0) {
-          particles.splice(i, 1);
-          continue;
-        }
+      idleAngleRef.current += 0.008;
 
-        const opacity = p.life * 0.8;
-
-        // Draw stretched line trail between consecutive particles
-        const next = particles[i - 1];
-        if (next) {
-          ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-          const midX = (p.x + next.x) / 2;
-          const midY = (p.y + next.y) / 2;
-          ctx.quadraticCurveTo(midX, midY, next.x, next.y);
-          ctx.strokeStyle = `rgba(${p.color}, ${opacity * 0.7})`;
-          ctx.lineWidth = p.size * 0.8 * p.life;
-          ctx.lineCap = "round";
-          ctx.lineJoin = "round";
-          ctx.stroke();
-        }
-
-        // Draw particle dot
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * p.life * 0.6, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${p.color}, ${opacity})`;
-        ctx.fill();
-      }
-
-      // Cursor position dot (subtle glow)
-      const { x: cx, y: cy } = mousePosRef.current;
       if (isVisible) {
+        linesRef.current.forEach((line, i) => {
+          const rotation = idleAngleRef.current * (line.speed > 0 ? 1 : -1) + line.angleOffset;
+          const startAngle = rotation;
+          const endAngle = rotation + line.arcLength;
+
+          // Arc
+          ctx.beginPath();
+          ctx.arc(line.x, line.y, line.radius, startAngle, endAngle);
+          ctx.strokeStyle = `rgba(${line.color}, ${0.75 + (i % 3) * 0.05})`;
+          ctx.lineWidth = line.strokeWidth;
+          ctx.lineCap = "round";
+          ctx.shadowColor = `rgba(${line.color}, 0.95)`;
+          ctx.shadowBlur = line.glow;
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+
+          // Glowing dot at the end of the arc
+          const endX = line.x + Math.cos(endAngle) * line.radius;
+          const endY = line.y + Math.sin(endAngle) * line.radius;
+          ctx.beginPath();
+          ctx.arc(endX, endY, 3 + (i % 3) * 0.5, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${line.color}, 0.95)`;
+          ctx.shadowColor = `rgba(${line.color}, 1)`;
+          ctx.shadowBlur = 14;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        });
+
+        // Small center dot
         ctx.beginPath();
-        ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
+        ctx.arc(mx, my, 3.2, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(139, 92, 246, 0.9)";
         ctx.shadowColor = "rgba(139, 92, 246, 0.8)";
         ctx.shadowBlur = 12;
         ctx.fill();
-        ctx.shadowBlur = 0;
-      }
-
-      // Idle: long rotating multi-colored lines around cursor
-      if (!isMovingRef.current && isVisible) {
-        const { x: cx, y: cy } = mousePosRef.current;
-        idleAngleRef.current += 0.012;
-        const baseAngle = idleAngleRef.current;
-        const innerRadius = 18;
-        const outerRadius = 55;       // longer lines
-        const lineCount = 16;         // more lines
-        const arcSpan = (Math.PI * 2) / lineCount * 0.65;
-
-        for (let i = 0; i < lineCount; i++) {
-          const color = TRAIL_COLORS[i % TRAIL_COLORS.length];
-          const angleOffset = (i * Math.PI * 2) / lineCount;
-          const startAngle = baseAngle + angleOffset;
-          const endAngle = startAngle + arcSpan;
-
-          ctx.beginPath();
-          ctx.arc(cx, cy, innerRadius + (i % 3) * 10, startAngle, endAngle);
-          ctx.strokeStyle = `rgba(${color}, 0.85)`;
-          ctx.lineWidth = 2.5;
-          ctx.lineCap = "round";
-          ctx.shadowColor = `rgba(${color}, 0.9)`;
-          ctx.shadowBlur = 12;
-          ctx.stroke();
-
-          // Outer longer arc
-          ctx.beginPath();
-          ctx.arc(cx, cy, outerRadius + (i % 2) * 8, -baseAngle * 1.2 + angleOffset, -baseAngle * 1.2 + angleOffset + arcSpan * 1.3);
-          ctx.strokeStyle = `rgba(${color}, 0.6)`;
-          ctx.lineWidth = 1.5;
-          ctx.lineCap = "round";
-          ctx.shadowColor = `rgba(${color}, 0.7)`;
-          ctx.shadowBlur = 8;
-          ctx.stroke();
-        }
         ctx.shadowBlur = 0;
       }
 
@@ -224,3 +179,4 @@ const CursorAnimation = () => {
 };
 
 export default CursorAnimation;
+
