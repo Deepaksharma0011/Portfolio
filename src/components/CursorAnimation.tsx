@@ -11,18 +11,24 @@ interface OrbDot {
 }
 
 const DOTS: OrbDot[] = [
-  { rgb: "255, 0, 128", color: "#ff0080", angle: 0, radius: 38, speed: 0.035, size: 3.5, history: [] },
-  { rgb: "0, 255, 255", color: "#00ffff", angle: 0.448, radius: 44, speed: 0.035, size: 3.4, history: [] },
-  { rgb: "255, 204, 0", color: "#ffcc00", angle: 0.897, radius: 50, speed: 0.035, size: 3.6, history: [] },
-  { rgb: "0, 255, 128", color: "#00ff80", angle: 1.346, radius: 42, speed: 0.035, size: 3.5, history: [] },
-  { rgb: "153, 51, 255", color: "#9933ff", angle: 1.795, radius: 48, speed: 0.035, size: 3.4, history: [] },
-  { rgb: "255, 102, 0", color: "#ff6600", angle: 2.244, radius: 36, speed: 0.035, size: 3.6, history: [] },
-  { rgb: "51, 153, 255", color: "#3399ff", angle: 2.693, radius: 52, speed: 0.035, size: 3.4, history: [] },
-  { rgb: "255, 51, 153", color: "#ff3399", angle: 3.142, radius: 40, speed: 0.035, size: 3.5, history: [] },
-  { rgb: "0, 204, 255", color: "#00ccff", angle: 3.591, radius: 46, speed: 0.035, size: 3.5, history: [] },
-  { rgb: "128, 255, 0", color: "#80ff00", angle: 4.04, radius: 54, speed: 0.035, size: 3.4, history: [] },
-  { rgb: "255, 0, 255", color: "#ff00ff", angle: 4.489, radius: 34, speed: 0.035, size: 3.6, history: [] },
-  { rgb: "255, 153, 0", color: "#ff9900", angle: 4.938, radius: 44, speed: 0.035, size: 3.5, history: [] },
+  { rgb: "255, 0, 128", color: "#ff0080", angle: 0, radius: 38, speed: 0.035, size: 3.3, history: [] },
+  { rgb: "0, 229, 255", color: "#00e5ff", angle: 0.349, radius: 44, speed: 0.035, size: 3.3, history: [] },
+  { rgb: "255, 204, 0", color: "#ffcc00", angle: 0.698, radius: 50, speed: 0.035, size: 3.3, history: [] },
+  { rgb: "0, 255, 128", color: "#00ff80", angle: 1.047, radius: 42, speed: 0.035, size: 3.3, history: [] },
+  { rgb: "157, 78, 221", color: "#9d4edd", angle: 1.396, radius: 48, speed: 0.035, size: 3.3, history: [] },
+  { rgb: "255, 102, 0", color: "#ff6600", angle: 1.745, radius: 36, speed: 0.035, size: 3.3, history: [] },
+  { rgb: "58, 134, 255", color: "#3a86ff", angle: 2.094, radius: 52, speed: 0.035, size: 3.3, history: [] },
+  { rgb: "255, 0, 110", color: "#ff006e", angle: 2.443, radius: 40, speed: 0.035, size: 3.3, history: [] },
+  { rgb: "0, 212, 255", color: "#00d4ff", angle: 2.793, radius: 46, speed: 0.035, size: 3.3, history: [] },
+  { rgb: "161, 255, 10", color: "#a1ff0a", angle: 3.142, radius: 54, speed: 0.035, size: 3.3, history: [] },
+  { rgb: "255, 0, 255", color: "#ff00ff", angle: 3.491, radius: 34, speed: 0.035, size: 3.3, history: [] },
+  { rgb: "255, 170, 0", color: "#ffaa00", angle: 3.84, radius: 44, speed: 0.035, size: 3.3, history: [] },
+  { rgb: "255, 51, 51", color: "#ff3333", angle: 4.189, radius: 48, speed: 0.035, size: 3.3, history: [] },
+  { rgb: "6, 255, 165", color: "#06ffa5", angle: 4.538, radius: 36, speed: 0.035, size: 3.3, history: [] },
+  { rgb: "199, 125, 255", color: "#c77dff", angle: 4.887, radius: 52, speed: 0.035, size: 3.3, history: [] },
+  { rgb: "255, 92, 141", color: "#ff5c8d", angle: 5.236, radius: 40, speed: 0.035, size: 3.3, history: [] },
+  { rgb: "57, 255, 20", color: "#39ff14", angle: 5.585, radius: 46, speed: 0.035, size: 3.3, history: [] },
+  { rgb: "67, 97, 238", color: "#4361ee", angle: 5.934, radius: 50, speed: 0.035, size: 3.3, history: [] },
 ];
 
 const TRAIL_LENGTH = 14;
