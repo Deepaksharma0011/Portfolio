@@ -11,21 +11,21 @@ interface OrbDot {
 }
 
 const DOTS: OrbDot[] = [
-  { rgb: "255, 0, 128", color: "#ff0080", angle: 0, radius: 38, speed: 0.05, size: 3.5, history: [] },
-  { rgb: "0, 255, 255", color: "#00ffff", angle: 0.448, radius: 44, speed: 0.05, size: 3.4, history: [] },
-  { rgb: "255, 204, 0", color: "#ffcc00", angle: 0.897, radius: 50, speed: 0.05, size: 3.6, history: [] },
-  { rgb: "0, 255, 128", color: "#00ff80", angle: 1.346, radius: 42, speed: 0.05, size: 3.5, history: [] },
-  { rgb: "153, 51, 255", color: "#9933ff", angle: 1.795, radius: 48, speed: 0.05, size: 3.4, history: [] },
-  { rgb: "255, 102, 0", color: "#ff6600", angle: 2.244, radius: 36, speed: 0.05, size: 3.6, history: [] },
-  { rgb: "51, 153, 255", color: "#3399ff", angle: 2.693, radius: 52, speed: 0.05, size: 3.4, history: [] },
-  { rgb: "255, 51, 153", color: "#ff3399", angle: 3.142, radius: 40, speed: 0.05, size: 3.5, history: [] },
-  { rgb: "0, 204, 255", color: "#00ccff", angle: 3.591, radius: 46, speed: 0.05, size: 3.5, history: [] },
-  { rgb: "128, 255, 0", color: "#80ff00", angle: 4.04, radius: 54, speed: 0.05, size: 3.4, history: [] },
-  { rgb: "255, 0, 255", color: "#ff00ff", angle: 4.489, radius: 34, speed: 0.05, size: 3.6, history: [] },
-  { rgb: "255, 153, 0", color: "#ff9900", angle: 4.938, radius: 44, speed: 0.05, size: 3.5, history: [] },
+  { rgb: "255, 0, 128", color: "#ff0080", angle: 0, radius: 38, speed: 0.035, size: 3.5, history: [] },
+  { rgb: "0, 255, 255", color: "#00ffff", angle: 0.448, radius: 44, speed: 0.035, size: 3.4, history: [] },
+  { rgb: "255, 204, 0", color: "#ffcc00", angle: 0.897, radius: 50, speed: 0.035, size: 3.6, history: [] },
+  { rgb: "0, 255, 128", color: "#00ff80", angle: 1.346, radius: 42, speed: 0.035, size: 3.5, history: [] },
+  { rgb: "153, 51, 255", color: "#9933ff", angle: 1.795, radius: 48, speed: 0.035, size: 3.4, history: [] },
+  { rgb: "255, 102, 0", color: "#ff6600", angle: 2.244, radius: 36, speed: 0.035, size: 3.6, history: [] },
+  { rgb: "51, 153, 255", color: "#3399ff", angle: 2.693, radius: 52, speed: 0.035, size: 3.4, history: [] },
+  { rgb: "255, 51, 153", color: "#ff3399", angle: 3.142, radius: 40, speed: 0.035, size: 3.5, history: [] },
+  { rgb: "0, 204, 255", color: "#00ccff", angle: 3.591, radius: 46, speed: 0.035, size: 3.5, history: [] },
+  { rgb: "128, 255, 0", color: "#80ff00", angle: 4.04, radius: 54, speed: 0.035, size: 3.4, history: [] },
+  { rgb: "255, 0, 255", color: "#ff00ff", angle: 4.489, radius: 34, speed: 0.035, size: 3.6, history: [] },
+  { rgb: "255, 153, 0", color: "#ff9900", angle: 4.938, radius: 44, speed: 0.035, size: 3.5, history: [] },
 ];
 
-const TRAIL_LENGTH = 18;
+const TRAIL_LENGTH = 14;
 const ANCHOR_LAG = 0.12;
 
 const CursorAnimation = () => {
@@ -38,12 +38,8 @@ const CursorAnimation = () => {
   const dotsRef = useRef<OrbDot[]>(DOTS.map((d) => ({ ...d, history: [] })));
 
   useEffect(() => {
-    const isTouch =
-      window.matchMedia("(pointer: coarse)").matches ||
-      !window.matchMedia("(pointer: fine)").matches ||
-      "ontouchstart" in window;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!isTouch && !reducedMotion) setEnabled(true);
+    if (!reducedMotion) setEnabled(true);
   }, []);
 
   useEffect(() => {
@@ -65,32 +61,43 @@ const CursorAnimation = () => {
       setIsVisible(true);
     };
 
+    const handleTouchMove = (e: TouchEvent) => {
+      const touch = e.touches[0] || e.changedTouches[0];
+      if (touch) {
+        mouseRef.current = { x: touch.clientX, y: touch.clientY };
+        setIsVisible(true);
+      }
+    };
+
+    const handleTouchEnd = () => setIsVisible(false);
     const handleMouseLeave = () => setIsVisible(false);
     const handleMouseEnter = () => setIsVisible(true);
 
-    const drawGradientLine = (
+    const drawTrail = (
       points: { x: number; y: number }[],
       color: string,
-      baseWidth: number,
-      glow: number
+      rgb: string
     ) => {
       if (points.length < 2) return;
-      for (let i = 0; i < points.length - 1; i++) {
-        const t = i / (points.length - 1);
-        const opacity = 0.05 + t * 0.75;
-        const width = baseWidth * (0.2 + t * 0.8);
-        ctx.beginPath();
-        ctx.moveTo(points[i].x, points[i].y);
-        ctx.lineTo(points[i + 1].x, points[i + 1].y);
-        ctx.strokeStyle = color.replace("<opacity>", opacity.toFixed(2));
-        ctx.lineWidth = width;
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
-        ctx.shadowColor = color.replace("<opacity>", "0.6");
-        ctx.shadowBlur = glow * t;
-        ctx.stroke();
-        ctx.shadowBlur = 0;
+      const head = points[points.length - 1];
+      const tail = points[0];
+      const gradient = ctx.createLinearGradient(tail.x, tail.y, head.x, head.y);
+      gradient.addColorStop(0, `rgba(${rgb}, 0.02)`);
+      gradient.addColorStop(1, `rgba(${rgb}, 0.7)`);
+
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i].x, points[i].y);
       }
+      ctx.strokeStyle = gradient;
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 8;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
     };
 
     const render = () => {
@@ -114,7 +121,7 @@ const CursorAnimation = () => {
         if (dot.history.length > TRAIL_LENGTH) dot.history.shift();
       });
 
-      // Draw subtle orbit ring around the anchor
+      // Subtle orbit ring around the anchor
       ctx.beginPath();
       ctx.arc(anchor.x, anchor.y, 46, 0, Math.PI * 2);
       ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
@@ -124,8 +131,7 @@ const CursorAnimation = () => {
       dotsRef.current.forEach((dot) => {
         const trail = dot.history;
         if (trail.length > 1) {
-          const colorTemplate = `rgba(${dot.rgb}, <opacity>)`;
-          drawGradientLine(trail, colorTemplate, 2.8, 12);
+          drawTrail(trail, dot.color, dot.rgb);
         }
 
         const head = trail[trail.length - 1];
@@ -134,7 +140,7 @@ const CursorAnimation = () => {
           ctx.arc(head.x, head.y, dot.size, 0, Math.PI * 2);
           ctx.fillStyle = dot.color;
           ctx.shadowColor = dot.color;
-          ctx.shadowBlur = 16;
+          ctx.shadowBlur = 12;
           ctx.fill();
           ctx.shadowBlur = 0;
         }
@@ -145,7 +151,7 @@ const CursorAnimation = () => {
       ctx.arc(anchor.x, anchor.y, 3.5, 0, Math.PI * 2);
       ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
       ctx.shadowColor = "rgba(255, 255, 255, 0.7)";
-      ctx.shadowBlur = 18;
+      ctx.shadowBlur = 14;
       ctx.fill();
       ctx.shadowBlur = 0;
 
@@ -153,6 +159,8 @@ const CursorAnimation = () => {
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd);
     document.body.addEventListener("mouseleave", handleMouseLeave);
     document.body.addEventListener("mouseenter", handleMouseEnter);
     animationFrameRef.current = requestAnimationFrame(render);
@@ -160,6 +168,8 @@ const CursorAnimation = () => {
     return () => {
       window.removeEventListener("resize", resizeCanvas);
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
       document.body.removeEventListener("mouseleave", handleMouseLeave);
       document.body.removeEventListener("mouseenter", handleMouseEnter);
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
