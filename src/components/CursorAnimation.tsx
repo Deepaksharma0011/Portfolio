@@ -11,14 +11,18 @@ interface OrbDot {
 }
 
 const DOTS: OrbDot[] = [
-  { rgb: "255, 0, 128", color: "#ff0080", angle: 0, radius: 38, speed: 0.05, size: 4.2, history: [] },
-  { rgb: "0, 255, 255", color: "#00ffff", angle: 0.785, radius: 44, speed: 0.05, size: 4.0, history: [] },
-  { rgb: "255, 204, 0", color: "#ffcc00", angle: 1.571, radius: 50, speed: 0.05, size: 4.5, history: [] },
-  { rgb: "0, 255, 128", color: "#00ff80", angle: 2.356, radius: 42, speed: 0.05, size: 4.2, history: [] },
-  { rgb: "153, 51, 255", color: "#9933ff", angle: 3.142, radius: 48, speed: 0.05, size: 4.0, history: [] },
-  { rgb: "255, 102, 0", color: "#ff6600", angle: 3.927, radius: 36, speed: 0.05, size: 4.5, history: [] },
-  { rgb: "51, 153, 255", color: "#3399ff", angle: 4.712, radius: 52, speed: 0.05, size: 4.0, history: [] },
-  { rgb: "255, 51, 153", color: "#ff3399", angle: 5.498, radius: 40, speed: 0.05, size: 4.2, history: [] },
+  { rgb: "255, 0, 128", color: "#ff0080", angle: 0, radius: 38, speed: 0.05, size: 3.5, history: [] },
+  { rgb: "0, 255, 255", color: "#00ffff", angle: 0.448, radius: 44, speed: 0.05, size: 3.4, history: [] },
+  { rgb: "255, 204, 0", color: "#ffcc00", angle: 0.897, radius: 50, speed: 0.05, size: 3.6, history: [] },
+  { rgb: "0, 255, 128", color: "#00ff80", angle: 1.346, radius: 42, speed: 0.05, size: 3.5, history: [] },
+  { rgb: "153, 51, 255", color: "#9933ff", angle: 1.795, radius: 48, speed: 0.05, size: 3.4, history: [] },
+  { rgb: "255, 102, 0", color: "#ff6600", angle: 2.244, radius: 36, speed: 0.05, size: 3.6, history: [] },
+  { rgb: "51, 153, 255", color: "#3399ff", angle: 2.693, radius: 52, speed: 0.05, size: 3.4, history: [] },
+  { rgb: "255, 51, 153", color: "#ff3399", angle: 3.142, radius: 40, speed: 0.05, size: 3.5, history: [] },
+  { rgb: "0, 204, 255", color: "#00ccff", angle: 3.591, radius: 46, speed: 0.05, size: 3.5, history: [] },
+  { rgb: "128, 255, 0", color: "#80ff00", angle: 4.04, radius: 54, speed: 0.05, size: 3.4, history: [] },
+  { rgb: "255, 0, 255", color: "#ff00ff", angle: 4.489, radius: 34, speed: 0.05, size: 3.6, history: [] },
+  { rgb: "255, 153, 0", color: "#ff9900", angle: 4.938, radius: 44, speed: 0.05, size: 3.5, history: [] },
 ];
 
 const TRAIL_LENGTH = 18;
