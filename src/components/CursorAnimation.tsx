@@ -36,11 +36,12 @@ const ANCHOR_LAG = 0.12;
 
 const CursorAnimation = () => {
   const [enabled, setEnabled] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number | null>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
   const anchorRef = useRef({ x: 0, y: 0 });
+  const visibleRef = useRef(false);
+  const initializedRef = useRef(false);
   const dotsRef = useRef<OrbDot[]>(DOTS.map((d) => ({ ...d, history: [] })));
 
   useEffect(() => {
@@ -55,29 +56,41 @@ const CursorAnimation = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current = { x: e.clientX, y: e.clientY };
-      setIsVisible(true);
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      const touch = e.touches[0] || e.changedTouches[0];
-      if (touch) {
-        mouseRef.current = { x: touch.clientX, y: touch.clientY };
-        setIsVisible(true);
+    const setPos = (x: number, y: number) => {
+      mouseRef.current = { x, y };
+      if (!initializedRef.current) {
+        anchorRef.current = { x, y };
+        initializedRef.current = true;
       }
+      visibleRef.current = true;
     };
 
-    const handleTouchEnd = () => setIsVisible(false);
-    const handleMouseLeave = () => setIsVisible(false);
-    const handleMouseEnter = () => setIsVisible(true);
+    const handleMouseMove = (e: MouseEvent) => setPos(e.clientX, e.clientY);
+    const handleTouchStart = (e: TouchEvent) => {
+      const t = e.touches[0] || e.changedTouches[0];
+      if (t) setPos(t.clientX, t.clientY);
+    };
+    const handleTouchMove = (e: TouchEvent) => {
+      const t = e.touches[0] || e.changedTouches[0];
+      if (t) setPos(t.clientX, t.clientY);
+    };
+    const handleMouseLeave = () => { visibleRef.current = false; };
+    const handleMouseEnter = () => { visibleRef.current = true; };
 
     const drawTrail = (
       points: { x: number; y: number }[],
@@ -108,16 +121,16 @@ const CursorAnimation = () => {
 
     const render = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const { x: mx, y: my } = mouseRef.current;
-      const anchor = anchorRef.current;
 
-      anchor.x += (mx - anchor.x) * ANCHOR_LAG;
-      anchor.y += (my - anchor.y) * ANCHOR_LAG;
-
-      if (!isVisible) {
+      if (!visibleRef.current || !initializedRef.current) {
         animationFrameRef.current = requestAnimationFrame(render);
         return;
       }
+
+      const { x: mx, y: my } = mouseRef.current;
+      const anchor = anchorRef.current;
+      anchor.x += (mx - anchor.x) * ANCHOR_LAG;
+      anchor.y += (my - anchor.y) * ANCHOR_LAG;
 
       dotsRef.current.forEach((dot) => {
         dot.angle += dot.speed;
@@ -127,7 +140,6 @@ const CursorAnimation = () => {
         if (dot.history.length > TRAIL_LENGTH) dot.history.shift();
       });
 
-      // Subtle orbit ring around the anchor
       ctx.beginPath();
       ctx.arc(anchor.x, anchor.y, 46, 0, Math.PI * 2);
       ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
@@ -136,9 +148,7 @@ const CursorAnimation = () => {
 
       dotsRef.current.forEach((dot) => {
         const trail = dot.history;
-        if (trail.length > 1) {
-          drawTrail(trail, dot.color, dot.rgb);
-        }
+        if (trail.length > 1) drawTrail(trail, dot.color, dot.rgb);
 
         const head = trail[trail.length - 1];
         if (head) {
@@ -152,7 +162,6 @@ const CursorAnimation = () => {
         }
       });
 
-      // Center glow dot
       ctx.beginPath();
       ctx.arc(anchor.x, anchor.y, 3.5, 0, Math.PI * 2);
       ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
@@ -165,8 +174,8 @@ const CursorAnimation = () => {
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
     window.addEventListener("touchmove", handleTouchMove, { passive: true });
-    window.addEventListener("touchend", handleTouchEnd);
     document.body.addEventListener("mouseleave", handleMouseLeave);
     document.body.addEventListener("mouseenter", handleMouseEnter);
     animationFrameRef.current = requestAnimationFrame(render);
@@ -174,13 +183,13 @@ const CursorAnimation = () => {
     return () => {
       window.removeEventListener("resize", resizeCanvas);
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchmove", handleTouchMove);
-      window.removeEventListener("touchend", handleTouchEnd);
       document.body.removeEventListener("mouseleave", handleMouseLeave);
       document.body.removeEventListener("mouseenter", handleMouseEnter);
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
     };
-  }, [enabled, isVisible]);
+  }, [enabled]);
 
   if (!enabled) return null;
 
@@ -192,5 +201,6 @@ const CursorAnimation = () => {
     />
   );
 };
+
 
 export default CursorAnimation;
