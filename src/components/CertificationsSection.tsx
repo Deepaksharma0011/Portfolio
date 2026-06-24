@@ -22,7 +22,7 @@ const certifications = [
     pdfUrl: "https://drive.google.com/file/d/1QpoHw54_rIdux9csFn2KtNihIaT3FMHb/view?usp=sharing",
   },
   {
-    title: "Tableau And PowerBI",
+    title: "ML, PowerBI & Tableau",
     issuer: "Upflairs",
     badge: "📊",
     pdfUrl: "https://drive.google.com/file/d/1I-pjSg9IqadKoJQXhX3Rm065iiTnsmPs/view?usp=sharing",
